@@ -1,0 +1,12 @@
+name: AltSwitcher
+main: matiasdamian\AltSwitcher\Main
+api: [5.0.0]
+version: 1.0.0
+author: matiasdamian
+description: A plugin for PocketMine-MP that allows you to switch between accounts without logging out of Xbox Live
+depend: [LangManager]
+softdepend: [FormAPI]
+permissions:
+  altswitcher.command:
+    description: Allows access to the account command
+    default: true

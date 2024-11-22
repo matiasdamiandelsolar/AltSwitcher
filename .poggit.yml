@@ -1,0 +1,12 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/matiasdamiandelsolar/AltSwitcher
+build-by-default: true
+branches:
+- main
+projects:
+  AltSwitcher:
+    path: ""
+    icon: "icon.png"
+    libs:
+      - src: "jojoe77777/FormAPI/FormAPI"
+        version: ^2.1.1
+...

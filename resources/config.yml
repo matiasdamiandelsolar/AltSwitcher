@@ -1,0 +1,23 @@
+# Configuration file for AltSwitcher
+account-switch:
+
+  # Should players be transferred to a server when they switch accounts? (true/false)
+  transfer-on-switch: true
+
+  # The IP address of the server players will be transferred to upon account switch.
+  server-ip: "127.0.0.1"
+
+  #  The port number of the server players will be transferred to.
+  server-port: 19132
+
+  #  Should all accounts in a group be banned if any account in the group is banned? (true/false)
+  # If set to true, banning any account in the group will result in all accounts being banned.
+  ban-alts: true
+
+groups:
+
+  # Allow players to ungroup their accounts? (true/false)
+  allow-ungroup: true
+
+  # The maximum number of accounts allowed in a single group
+  max-group-size: 2
