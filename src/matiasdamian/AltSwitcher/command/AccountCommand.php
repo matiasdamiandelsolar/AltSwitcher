@@ -21,7 +21,7 @@ use matiasdamian\LangManager\LangManager;
 use jojoe77777\FormAPI\SimpleForm;
 use jojoe77777\FormAPI\CustomForm;
 
-class AccountCommand extends Command implements AccountSubcommands{
+class AccountCommand extends Command{
 	/** @var Main */
 	private readonly Main $plugin;
 	
