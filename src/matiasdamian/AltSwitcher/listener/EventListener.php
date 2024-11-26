@@ -36,8 +36,6 @@ class EventListener implements Listener{
 	}
 	
 	/**
-	 * Handle player login.
-	 *
 	 * @param PlayerLoginEvent $event
 	 */
 	public function onLogin(PlayerLoginEvent $event): void{
@@ -84,8 +82,6 @@ class EventListener implements Listener{
 	}
 	
 	/**
-	 * Set active UUID.
-	 *
 	 * @param PlayerPreLoginEvent $event
 	 * @priority HIGHEST
 	 */
@@ -102,6 +98,8 @@ class EventListener implements Listener{
 	}
 	
 	/**
+	 * Set the active username for the player.
+	 *
 	 * @param PlayerInfo $playerInfo
 	 * @param string $username
 	 * @return void

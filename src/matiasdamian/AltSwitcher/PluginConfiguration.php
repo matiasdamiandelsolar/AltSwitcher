@@ -7,18 +7,20 @@ namespace matiasdamian\AltSwitcher;
 use pocketmine\utils\Config;
 
 class PluginConfiguration{
-	/** @var Config  */
-	private Config $config;
+	/** @var Main */
+	private Main $plugin;
+	/** @var Config */
+	private readonly Config $config;
 	
-	/** @var bool  */
+	/** @var bool */
 	private bool $transferOnSwitch = true;
-	/** @var string  */
+	/** @var string */
 	private string $serverIp = "127.0.0.1";
-	/** @var int  */
+	/** @var int */
 	private int $serverPort = 19132;
-	/** @var bool  */
+	/** @var bool */
 	private bool $allowUngroup = true;
-	/** @var int  */
+	/** @var int */
 	private int $maxGroupSize = 2;
 	/** @var bool */
 	private bool $banAltAccounts = true;
@@ -28,45 +30,67 @@ class PluginConfiguration{
 	 */
 	public function __construct(Main $plugin){
 		$this->config = $plugin->getConfig();
-		$this->loadConfiguration($plugin);
+		$this->plugin = $plugin;
+		$this->loadConfigValues();
 	}
 	
 	/**
-	 * Loads the configuration from the plugin.
-	 *
-	 * @param Main $plugin
-	 * @return void
+	 * Load and validate configuration values.
 	 */
-	private function loadConfiguration(Main $plugin) : void{
-		$this->transferOnSwitch = (bool) $this->config->getNested("account-switch.transfer-on-switch");
-		
-		// Server IP validation
-		$serverIp = strval($plugin->getConfig()->getNested("account-switch.server-ip"));
-		if(trim($serverIp) !== ""){
-			if(filter_var($serverIp, FILTER_VALIDATE_IP)){
-				$this->serverIp = $serverIp;
-			}else{
-				$plugin->getLogger()->warning("'server-ip' must be a valid IP address or hostname");
-			}
-		}
-		
-		// Server port validation
-		$serverPort = (int) $this->config->getNested("account-switch.server-port");
-		if($serverPort >= 0 && $serverPort <= 65535){
-			$this->serverPort = $serverPort;
-		}else{
-			$plugin->getLogger()->warning("'server-port' must be a valid port number");
-		}
-		
-		$this->allowUngroup = boolval($this->config->getNested("groups.allow-ungroup"));
-		
-		$maxGroupSize = (int) $this->config->getNested("groups.max-group-size");
-		if($maxGroupSize > 0){
-			$this->maxGroupSize = $maxGroupSize;
-		}
-		
-		$this->banAltAccounts = (bool) $this->config->getNested("ban-alt-accounts");
+	private function loadConfigValues(): void{
+		$this->transferOnSwitch = $this->getConfigValue("account-switch.transfer-on-switch", false);
+		$this->serverIp = $this->validateServerIp();
+		$this->serverPort = $this->validateServerPort();
+		$this->allowUngroup = $this->getConfigValue("groups.allow-ungroup", false);
+		$this->maxGroupSize = $this->getConfigValue("groups.max-group-size", 0);
+		$this->banAltAccounts = $this->getConfigValue("ban-alt-accounts", false);
 	}
+	
+	/**
+	 * Get a configuration value with a default.
+	 *
+	 * @param string $key
+	 * @param mixed $default
+	 * @return mixed
+	 */
+	private function getConfigValue(string $key, $default){
+		return $this->config->getNested($key, $default);
+	}
+	
+	/**
+	 * Validate and return the server IP address from the configuration.
+	 *
+	 * @return string|null
+	 */
+	private function validateServerIp(): ?string{
+		$serverIp = trim(strval($this->config->getNested("account-switch.server-ip")));
+		
+		if($serverIp === ""){
+			return null;
+		}
+		
+		if(filter_var($serverIp, FILTER_VALIDATE_IP)){
+			return $serverIp;
+		}
+		
+		$this->plugin->getLogger()->warning("'server-ip' must be a valid IP address or hostname");
+		return null;
+	}
+	
+	/**
+	 * Validate and return the server port from the configuration.
+	 *
+	 * @return int
+	 */
+	private function validateServerPort(): int{
+		$serverPort = (int)$this->config->getNested("account-switch.server-port");
+		if($serverPort < 0 || $serverPort > 65535){
+			$this->plugin->getLogger()->warning("'server-port' must be a valid port number");
+			return 0; // Default to 0 if invalid
+		}
+		return $serverPort;
+	}
+	
 	
 	/**
 	 * @return array
